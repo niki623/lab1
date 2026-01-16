@@ -1,0 +1,23 @@
+#define _POSIX_C_SOURCE 200809L
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+  char line[1000];
+
+  while (1) {
+    printf("Enter text here: ");
+    fgets(line, sizeof(line), stdin);
+    line[strcspn(line, "\n")] = '\0'; // remove newline
+
+    printf("Tokens:\n");
+
+    char *saveptr;
+    char *token = strtok_r(line, " ", &saveptr); // first token
+    while (token != NULL) {
+      printf(" %s\n", token);
+      token = strtok_r(NULL, " ", &saveptr); // next token
+    }
+  }
+  return 0;
+}
