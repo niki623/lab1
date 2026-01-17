@@ -1,23 +1,31 @@
 #define _POSIX_C_SOURCE 200809L
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 int main() {
-  char line[1000];
+  char *buff = NULL;
+  size_t size = 0;
 
-  while (1) {
-    printf("Enter text here: ");
-    fgets(line, sizeof(line), stdin);
-    line[strcspn(line, "\n")] = '\0'; // remove newline
+  printf("Enter text here: ");
+  ssize_t num_char = getline(&buff, &size, stdin);
+  if (num_char == -1) {
+    perror("getline failed");
+    free(buff);
+    return 1;
+  }
+  if (buff[num_char - 1] == '\n')
+    buff[num_char - 1] = '\0';
+  
+  printf("Buffer contains: \"%s\"\n", buff);
 
-    printf("Tokens:\n");
-
-    char *saveptr;
-    char *token = strtok_r(line, " ", &saveptr); // first token
-    while (token != NULL) {
+  char *saveptr;
+  char *token = strtok_r(buff, " ", &saveptr); // first token
+  printf("Tokens:\n");
+  while (token != NULL) {
       printf(" %s\n", token);
       token = strtok_r(NULL, " ", &saveptr); // next token
-    }
   }
+  free(buff);
   return 0;
 }
