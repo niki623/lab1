@@ -1,0 +1,30 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <wait.h>
+
+int main() {
+  char input[256];
+
+  while (1) {
+    printf("Enter programs to run.\n");
+    scanf("%s", input);
+    pid_t pid = fork();
+
+    if (pid < 0) {
+      perror("Fork failed");
+      exit(1);
+    }
+    if (pid == 0) {
+      execl(input, input, NULL);
+
+      printf("Exec failure \n"); // if exec fails
+      exit(1);
+    } else {
+      int wstatus = 0;
+      waitpid(pid, &wstatus, 0);
+    }
+  }
+  return 0;
+}

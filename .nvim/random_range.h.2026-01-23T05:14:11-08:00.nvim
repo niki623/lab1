@@ -1,0 +1,6 @@
+#ifndef RANDOM_RANGE_H
+#define RANDOM_RANGE_H
+
+int random_range(int min, int max);
+
+#end
